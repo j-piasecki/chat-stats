@@ -12,11 +12,13 @@
   "scripts": {
     "build": "yarn tsc",
     "lint": "yarn eslint --ext .ts src/ && yarn prettier --check src/",
-    "format": "prettier --write --list-different src/"
+    "format": "prettier --write --list-different src/",
+    "start": "yarn build && node build/index.js"
   },
   "devDependencies": {
     "@types/jest": "^28.1.7",
     "@types/node-ipc": "^9.2.0",
+    "@types/tmi.js": "^1.8.2",
     "@typescript-eslint/eslint-plugin": "^5.34.0",
     "@typescript-eslint/parser": "^5.34.0",
     "eslint": "^8.22.0",
@@ -29,6 +31,7 @@
   },
   "dependencies": {
     "chat-stats-common": "*",
-    "node-ipc": "^11.1.0"
+    "node-ipc": "^11.1.0",
+    "tmi.js": "^1.8.5"
   }
 }

@@ -12,7 +12,8 @@
   "scripts": {
     "build": "yarn tsc",
     "lint": "yarn eslint --ext .ts src/ && yarn prettier --check src/",
-    "format": "prettier --write --list-different src/"
+    "format": "prettier --write --list-different src/",
+    "start": "yarn build && node build/index.js"
   },
   "devDependencies": {
     "@types/jest": "^28.1.7",
