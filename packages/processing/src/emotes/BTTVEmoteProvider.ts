@@ -28,8 +28,7 @@ export class BTTVEmoteProvider implements EmoteProvider {
   }
 
   getChannelEmotes(channelId: string): Promise<Emote[]> {
-    // TODO: figure out a way to get BTTV id from Twitch's
-    return fetch(`https://api.betterttv.net/3/users/${channelId}`, {
+    return fetch(`https://api.betterttv.net/3/cached/users/twitch/${channelId}`, {
       method: 'get',
     })
       .then((response) => {
