@@ -1,5 +1,5 @@
 {
-  "name": "chat-stats-processing",
+  "name": "chat-stats-bot",
   "version": "0.1.0",
   "description": "",
   "license": "MIT",
@@ -29,7 +29,6 @@
   },
   "dependencies": {
     "chat-stats-common": "*",
-    "node-fetch": "^3.2.10",
     "node-ipc": "^11.1.0"
   }
 }
