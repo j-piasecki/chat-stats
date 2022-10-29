@@ -18,6 +18,6 @@ ipc.config.silent = true
 
 ipc.connectTo('eavesdropper', 'eavesdropper.service', () => {
   ipc.of.eavesdropper.on('message', (data) => {
-    console.log(data)
+    console.log(data.channel, data.message)
   })
 })
