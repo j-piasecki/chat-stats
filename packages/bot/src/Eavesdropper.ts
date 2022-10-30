@@ -25,7 +25,7 @@ export class Eavesdropper {
     console.log(
       `Status: ${this.chatClient.readyState()}, listening on: ${
         this.chatClient.getChannels().length
-      } channels, ${this.messageCounter / 5} m/s`
+      } channels, ${this.messageCounter / 10} m/s`
     )
 
     this.messageCounter = 0
@@ -41,9 +41,10 @@ export class Eavesdropper {
     this.chatClient.on('connected', (addr, port) => {
       console.log(`Connected to ${addr}:${port}`)
 
+      this.logStatus()
       setInterval(() => {
         this.logStatus()
-      }, 5000)
+      }, 10000)
     })
 
     this.chatClient.connect().catch((e) => {

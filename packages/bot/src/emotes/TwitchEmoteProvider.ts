@@ -1,21 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import fetch from 'node-fetch'
 
-import { Emote, TwitchAuthHandler, sleep } from 'chat-stats-common'
+import { Emote, TwitchAuthHandler } from 'chat-stats-common'
 import { EmoteProvider } from './EmoteProvider.js'
 
 export class TwitchEmoteProvider implements EmoteProvider {
-  private authHandler = new TwitchAuthHandler()
-
   async getGlobalEmotes(): Promise<Emote[]> {
-    while (this.authHandler.token === undefined) {
-      await sleep(50)
-    }
-
     return fetch('https://api.twitch.tv/helix/chat/emotes/global', {
       method: 'get',
       headers: {
-        Authorization: `Bearer ${this.authHandler.token}`,
+        Authorization: `Bearer ${TwitchAuthHandler.token}`,
         'Client-Id': process.env.TWITCH_CLIENT_ID!,
       },
     })
@@ -38,14 +32,10 @@ export class TwitchEmoteProvider implements EmoteProvider {
   }
 
   async getChannelEmotes(channelId: string): Promise<Emote[]> {
-    while (this.authHandler.token === undefined) {
-      await sleep(50)
-    }
-
     return fetch(`https://api.twitch.tv/helix/chat/emotes?broadcaster_id=${channelId}`, {
       method: 'get',
       headers: {
-        Authorization: `Bearer ${this.authHandler.token}`,
+        Authorization: `Bearer ${TwitchAuthHandler.token}`,
         'Client-Id': process.env.TWITCH_CLIENT_ID!,
       },
     })

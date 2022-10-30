@@ -1,4 +1,4 @@
-import { Game, TwitchAuthHandler, sleep } from 'chat-stats-common'
+import { Game, TwitchAuthHandler } from 'chat-stats-common'
 
 const CHANNEL_GAME_REFRESH_PERIOD = 1000 * 60 * 5
 
@@ -8,7 +8,6 @@ type CachedGame = {
 }
 
 export class GameRegistry {
-  private authHandler = new TwitchAuthHandler()
   private channelGames: Map<string, CachedGame> = new Map()
 
   public async getChannelGame(channelId: string): Promise<Game> {
@@ -17,14 +16,10 @@ export class GameRegistry {
     if (cache === undefined || Date.now() - cache.timestamp > CHANNEL_GAME_REFRESH_PERIOD) {
       console.log('Fetching game info for channel', channelId)
 
-      while (this.authHandler.token === undefined) {
-        await sleep(50)
-      }
-
       const gameData = await fetch(`https://api.twitch.tv/helix/streams?user_id=${channelId}`, {
         method: 'get',
         headers: {
-          Authorization: `Bearer ${this.authHandler.token}`,
+          Authorization: `Bearer ${TwitchAuthHandler.token}`,
           'Client-Id': process.env.TWITCH_CLIENT_ID!,
         },
       })

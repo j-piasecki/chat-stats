@@ -4,18 +4,14 @@ import fetch from 'node-fetch'
 const REFRESH_TOKEN_BEFORE_DUE = 360
 
 export class TwitchAuthHandler {
-  private _token: string
-  private _refreshToken: string
+  private static _token: string
+  private static _refreshToken: string
 
-  constructor() {
-    this.acquireToken()
-  }
-
-  get token() {
+  static get token() {
     return this._token
   }
 
-  private async acquireToken() {
+  public static async acquireToken() {
     const params = new URLSearchParams()
     params.set('client_id', process.env.TWITCH_CLIENT_ID!)
     params.set('client_secret', process.env.TWITCH_CLIENT_SECRET!)
@@ -50,13 +46,11 @@ export class TwitchAuthHandler {
         if (reason.code === 'ETIMEDOUT') {
           console.log('Retrying...')
           this.acquireToken()
-        } else {
-          this._token = ''
         }
       })
   }
 
-  private async refreshToken() {
+  private static async refreshToken() {
     const params = new URLSearchParams()
     params.set('client_id', process.env.TWITCH_CLIENT_ID!)
     params.set('client_secret', process.env.TWITCH_CLIENT_SECRET!)
