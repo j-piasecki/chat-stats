@@ -1,5 +1,5 @@
 import { Emote } from 'chat-stats-common'
-import { GeneralEmoteProvider } from './emotes/GeneralEmoteProvider.js'
+import { GeneralEmoteProvider } from './GeneralEmoteProvider.js'
 
 const GLOBAL_EMOTES_REFRESH_PERIOD = 1000 * 60 * 60 * 24
 const CHANNEL_EMOTES_REFRESH_PERIOD = 1000 * 60 * 60

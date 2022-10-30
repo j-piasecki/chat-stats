@@ -1,6 +1,6 @@
 import { EmoteCounter } from 'chat-stats-database'
 import type tmi from 'tmi.js'
-import { EmoteRegistry } from './EmoteRegistry.js'
+import { EmoteRegistry } from './emotes/EmoteRegistry.js'
 
 export class EmoteExtractor {
   private emoteRegistry = new EmoteRegistry()
