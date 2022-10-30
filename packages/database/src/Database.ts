@@ -23,9 +23,9 @@ export class Database {
 
   static async saveMessage(
     message: string,
-    channelId: number,
+    channelId: string,
     channelName: string,
-    userId: number,
+    userId: string,
     userName: string,
     subscriber: boolean,
     moderator: boolean,
@@ -53,9 +53,9 @@ export class Database {
 
   static async updateEmoteUsage(
     data: EmoteCounter[],
-    channelId: number,
+    channelId: string,
     channelName: string,
-    userId: number,
+    userId: string,
     userName: string
   ) {
     await this.pool.query(
