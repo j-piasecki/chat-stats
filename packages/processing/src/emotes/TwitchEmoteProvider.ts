@@ -6,6 +6,10 @@ import { EmoteProvider } from './EmoteProvider.js'
 
 const REFRESH_TOKEN_BEFORE_DUE = 360
 
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
 export class TwitchEmoteProvider implements EmoteProvider {
   private _token: string
   private _refreshToken: string
@@ -15,6 +19,10 @@ export class TwitchEmoteProvider implements EmoteProvider {
   }
 
   async getGlobalEmotes(): Promise<Emote[]> {
+    while (this._token === undefined) {
+      await sleep(250)
+    }
+
     return fetch('https://api.twitch.tv/helix/chat/emotes/global', {
       method: 'get',
       headers: {
@@ -40,7 +48,11 @@ export class TwitchEmoteProvider implements EmoteProvider {
       })
   }
 
-  getChannelEmotes(channelId: string): Promise<Emote[]> {
+  async getChannelEmotes(channelId: string): Promise<Emote[]> {
+    while (this._token === undefined) {
+      await sleep(250)
+    }
+
     return fetch(`https://api.twitch.tv/helix/chat/emotes?broadcaster_id=${channelId}`, {
       method: 'get',
       headers: {
@@ -113,6 +125,13 @@ export class TwitchEmoteProvider implements EmoteProvider {
       })
       .catch((reason: any) => {
         console.log('Could not acquire twitch token:', reason.message)
+
+        if (reason.code === 'ETIMEDOUT') {
+          console.log('Retrying...')
+          this.getToken()
+        } else {
+          this._token = ''
+        }
       })
   }
 
@@ -146,6 +165,11 @@ export class TwitchEmoteProvider implements EmoteProvider {
       })
       .catch((reason: any) => {
         console.log('Could not refresh twitch token:', reason.message)
+
+        if (reason.code === 'ETIMEDOUT') {
+          console.log('Retrying...')
+          this.refreshToken()
+        }
       })
   }
 }

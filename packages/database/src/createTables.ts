@@ -3,8 +3,8 @@ import pg from 'pg'
 export async function createTables(pool: pg.Pool) {
   await pool.query(`
     CREATE TABLE IF NOT EXISTS emotes(
-      id VARCHAR(64) PRIMARY KEY,
-      name VARCHAR(64) NOT NULL,
+      id VARCHAR(128) PRIMARY KEY,
+      name VARCHAR(128) NOT NULL,
       animated BOOLEAN NOT NULL,
       urls JSONB
     );
@@ -29,7 +29,7 @@ export async function createTables(pool: pg.Pool) {
       timestamp BIGINT NOT NULL,
       channel_id INTEGER,
       user_id INTEGER,
-      emote_id VARCHAR(64),
+      emote_id VARCHAR(128),
       count INT,
 
       CONSTRAINT pk_emotes
