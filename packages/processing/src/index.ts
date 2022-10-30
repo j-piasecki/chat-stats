@@ -13,6 +13,7 @@ ipc.connectTo('eavesdropper', 'eavesdropper.service', () => {
     extractor.extractEmotes(data.message, data.user).then((emotes) => {
       Database.updateEmoteUsage(
         emotes,
+        data.timestamp,
         data.user['room-id'],
         data.channel,
         data.user['user-id'],
