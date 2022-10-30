@@ -1,23 +1,23 @@
 import ipc from 'node-ipc'
+import { Database } from 'chat-stats-database'
 
-import { TwitchEmoteProvider } from './emotes/TwitchEmoteProvider.js'
-import { BTTVEmoteProvider } from './emotes/BTTVEmoteProvider.js'
-import { SevenTVEmoteProvider } from './emotes/SevenTVEmoteProvider.js'
+import { EmoteExtractor } from './EmoteExtractor.js'
 
-// const provider = new SevenTVEmoteProvider()
-
-// provider.getGlobalEmotes().then((data) => {
-//   console.log(JSON.stringify(data, undefined, 2))
-// })
-
-// provider.getChannelEmotes('57361005').then((data) => {
-//   console.log(JSON.stringify(data, undefined, 2))
-// })
+const extractor = new EmoteExtractor()
 
 ipc.config.silent = true
-
 ipc.connectTo('eavesdropper', 'eavesdropper.service', () => {
+  console.log('Connected to the Eavesdropper')
+
   ipc.of.eavesdropper.on('message', (data) => {
-    console.log(data.channel, data.message)
+    extractor.extractEmotes(data.message, data.user).then((emotes) => {
+      Database.updateEmoteUsage(
+        emotes,
+        data.user['room-id'],
+        data.channel,
+        data.user['user-id'],
+        data.user.username
+      )
+    })
   })
 })
