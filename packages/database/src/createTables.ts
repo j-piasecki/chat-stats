@@ -11,6 +11,14 @@ export async function createTables(pool: pg.Pool) {
   `)
 
   await pool.query(`
+    CREATE TABLE IF NOT EXISTS games(
+      id INTEGER PRIMARY KEY,
+      name VARCHAR(1024) NOT NULL,
+      thumbnail_url VARCHAR(4096) NOT NULL
+    );
+  `)
+
+  await pool.query(`
     CREATE TABLE IF NOT EXISTS channel_names(
       id INTEGER PRIMARY KEY,
       name VARCHAR(50) NOT NULL UNIQUE
@@ -77,6 +85,7 @@ export async function createTables(pool: pg.Pool) {
       channel_id INTEGER NOT NULL,
       user_id INTEGER NOT NULL,
       user_name VARCHAR(50) NOT NULL,
+      game_id INTEGER NOT NULL,
       subscriber BOOLEAN NOT NULL,
       moderator BOOLEAN NOT NULL,
       turbo BOOLEAN NOT NULL,
@@ -88,6 +97,10 @@ export async function createTables(pool: pg.Pool) {
 
       CONSTRAINT fk_user
         FOREIGN KEY(user_id) REFERENCES user_names(id)
+        ON DELETE CASCADE,
+
+      CONSTRAINT fk_game
+        FOREIGN KEY(game_id) REFERENCES games(id)
         ON DELETE CASCADE
     );
   `)

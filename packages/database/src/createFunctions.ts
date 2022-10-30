@@ -9,6 +9,9 @@ export async function createFunctions(pool: pg.Pool) {
       v_channel_name VARCHAR(50),
       v_user_id INT,
       v_user_name VARCHAR(50),
+      v_game_id INT,
+      v_game_name VARCHAR(1024),
+      v_game_thumbnail_url VARCHAR(4096),
       v_subscriber BOOLEAN,
       v_moderator BOOLEAN,
       v_turbo BOOLEAN,
@@ -20,6 +23,9 @@ export async function createFunctions(pool: pg.Pool) {
     DECLARE
       rounded_timestamp BIGINT := (v_timestamp / 86400000) * 86400000;
     BEGIN
+      INSERT INTO games (id, name, thumbnail_url)
+        VALUES (v_game_id, v_game_name, v_game_thumbnail_url)
+        ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name, thumbnail_url = EXCLUDED.thumbnail_url;
       INSERT INTO channel_names (id, name)
         VALUES (v_channel_id, v_channel_name)
         ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name;
@@ -29,8 +35,8 @@ export async function createFunctions(pool: pg.Pool) {
       INSERT INTO user_channels (timestamp, user_id, channel_id, count)
         VALUES (rounded_timestamp, v_user_id, v_channel_id, 1)
         ON CONFLICT (timestamp, user_id, channel_id) DO UPDATE SET count=user_channels.count + 1;
-      INSERT INTO messages (message, timestamp, channel_id, user_id, user_name, subscriber, moderator, turbo, first_message)
-        VALUES (v_msg, v_timestamp, v_channel_id, v_user_id, v_user_name, v_subscriber, v_moderator, v_turbo, v_first_message);
+      INSERT INTO messages (message, timestamp, channel_id, user_id, user_name, game_id, subscriber, moderator, turbo, first_message)
+        VALUES (v_msg, v_timestamp, v_channel_id, v_user_id, v_user_name, v_game_id, v_subscriber, v_moderator, v_turbo, v_first_message);
     END; $$;
   `)
 

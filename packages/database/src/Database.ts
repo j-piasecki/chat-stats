@@ -23,10 +23,14 @@ export class Database {
 
   static async saveMessage(
     message: string,
+    timestamp: number,
     channelId: string,
     channelName: string,
     userId: string,
     userName: string,
+    gameId: string,
+    gameName: string,
+    gameThumbnailUrl: string,
     subscriber: boolean,
     moderator: boolean,
     turbo: boolean,
@@ -34,15 +38,18 @@ export class Database {
   ) {
     this.pool.query(
       `
-        SELECT save_message($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);
+        SELECT save_message($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13);
     `,
       [
         message,
-        Date.now(),
+        timestamp,
         channelId,
         channelName,
         userId,
         userName,
+        gameId,
+        gameName,
+        gameThumbnailUrl,
         subscriber,
         moderator,
         turbo,
@@ -53,6 +60,7 @@ export class Database {
 
   static async updateEmoteUsage(
     data: EmoteCounter[],
+    timestamp: number,
     channelId: string,
     channelName: string,
     userId: string,
@@ -62,7 +70,7 @@ export class Database {
       `
       SELECT update_emotes($1::jsonb, $2, $3, $4, $5, $6);
     `,
-      [JSON.stringify(data), Date.now(), channelId, channelName, userId, userName]
+      [JSON.stringify(data), timestamp, channelId, channelName, userId, userName]
     )
   }
 }

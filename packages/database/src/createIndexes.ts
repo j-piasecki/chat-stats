@@ -46,6 +46,13 @@ export async function createIndexes(pool: pg.Pool) {
   `)
 
   await pool.query(`
+    CREATE INDEX IF NOT EXISTS user_timestamp_index ON user_channels(
+      user_id,
+      timestamp DESC
+    );
+  `)
+
+  await pool.query(`
     CREATE INDEX IF NOT EXISTS channel_names_index ON channel_names USING hash(
       name
     );
@@ -60,13 +67,6 @@ export async function createIndexes(pool: pg.Pool) {
   await pool.query(`
     CREATE INDEX IF NOT EXISTS emote_names_index ON emotes USING hash(
       name
-    );
-  `)
-
-  await pool.query(`
-    CREATE INDEX IF NOT EXISTS user_timestamp_index ON user_channels(
-      user_id,
-      timestamp DESC
     );
   `)
 }
