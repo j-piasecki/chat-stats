@@ -1,32 +1,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import fetch from 'node-fetch'
 
-import { Emote } from 'chat-stats-common'
+import { Emote, TwitchAuthHandler, sleep } from 'chat-stats-common'
 import { EmoteProvider } from './EmoteProvider.js'
 
-const REFRESH_TOKEN_BEFORE_DUE = 360
-
-function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms))
-}
-
 export class TwitchEmoteProvider implements EmoteProvider {
-  private _token: string
-  private _refreshToken: string
-
-  constructor() {
-    this.getToken()
-  }
+  private authHandler = new TwitchAuthHandler()
 
   async getGlobalEmotes(): Promise<Emote[]> {
-    while (this._token === undefined) {
-      await sleep(250)
+    while (this.authHandler.token === undefined) {
+      await sleep(50)
     }
 
     return fetch('https://api.twitch.tv/helix/chat/emotes/global', {
       method: 'get',
       headers: {
-        Authorization: `Bearer ${this._token}`,
+        Authorization: `Bearer ${this.authHandler.token}`,
         'Client-Id': process.env.TWITCH_CLIENT_ID!,
       },
     })
@@ -49,14 +38,14 @@ export class TwitchEmoteProvider implements EmoteProvider {
   }
 
   async getChannelEmotes(channelId: string): Promise<Emote[]> {
-    while (this._token === undefined) {
-      await sleep(250)
+    while (this.authHandler.token === undefined) {
+      await sleep(50)
     }
 
     return fetch(`https://api.twitch.tv/helix/chat/emotes?broadcaster_id=${channelId}`, {
       method: 'get',
       headers: {
-        Authorization: `Bearer ${this._token}`,
+        Authorization: `Bearer ${this.authHandler.token}`,
         'Client-Id': process.env.TWITCH_CLIENT_ID!,
       },
     })
@@ -92,84 +81,5 @@ export class TwitchEmoteProvider implements EmoteProvider {
         `https://static-cdn.jtvnw.net/emoticons/v2/${from.id}/${format}/light/3.0`,
       ],
     }
-  }
-
-  private async getToken() {
-    const params = new URLSearchParams()
-    params.set('client_id', process.env.TWITCH_CLIENT_ID!)
-    params.set('client_secret', process.env.TWITCH_CLIENT_SECRET!)
-    params.set('code', process.env.TWITCH_CODE!)
-    params.set('grant_type', 'authorization_code')
-    params.set('redirect_uri', 'http://localhost:3000')
-
-    await fetch('https://id.twitch.tv/oauth2/token', {
-      method: 'post',
-      body: params,
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json()
-        } else {
-          return response.json().then((data) => {
-            throw data
-          })
-        }
-      })
-      .then((result: any) => {
-        this._token = result.access_token
-        this._refreshToken = result.refresh_token
-
-        setTimeout(() => {
-          this.refreshToken()
-        }, result.expires_in - REFRESH_TOKEN_BEFORE_DUE)
-      })
-      .catch((reason: any) => {
-        console.log('Could not acquire twitch token:', reason.message)
-
-        if (reason.code === 'ETIMEDOUT') {
-          console.log('Retrying...')
-          this.getToken()
-        } else {
-          this._token = ''
-        }
-      })
-  }
-
-  private async refreshToken() {
-    const params = new URLSearchParams()
-    params.set('client_id', process.env.TWITCH_CLIENT_ID!)
-    params.set('client_secret', process.env.TWITCH_CLIENT_SECRET!)
-    params.set('refresh_token', this._refreshToken)
-    params.set('grant_type', 'refresh_token')
-
-    await fetch('https://id.twitch.tv/oauth2/token', {
-      method: 'post',
-      body: params,
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json()
-        } else {
-          return response.json().then((data) => {
-            throw data
-          })
-        }
-      })
-      .then((result: any) => {
-        this._token = result.access_token
-        this._refreshToken = result.refresh_token
-
-        setTimeout(() => {
-          this.refreshToken()
-        }, result.expires_in - REFRESH_TOKEN_BEFORE_DUE)
-      })
-      .catch((reason: any) => {
-        console.log('Could not refresh twitch token:', reason.message)
-
-        if (reason.code === 'ETIMEDOUT') {
-          console.log('Retrying...')
-          this.refreshToken()
-        }
-      })
   }
 }
