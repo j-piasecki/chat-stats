@@ -73,4 +73,40 @@ export class Database {
       [JSON.stringify(data), timestamp, channelId, channelName, userId, userName]
     )
   }
+
+  static async getMessageCountInChannel(
+    channelName: string,
+    startTimestamp: number,
+    endTimestamp = Date.now()
+  ) {
+    if (!channelName.startsWith('#')) {
+      channelName = '#' + channelName
+    }
+
+    return await this.pool.query(
+      `
+        SELECT SUM(count) FROM user_channels
+        WHERE channel_id=(SELECT id FROM channel_names WHERE name=$1)
+          AND timestamp BETWEEN $2 AND $3;
+    `,
+      [channelName, startTimestamp, endTimestamp]
+    )
+  }
+
+  static async getUserMessagesCountPerChannel(
+    userName: string,
+    startTimestamp: number,
+    endTimestamp = Date.now()
+  ) {
+    return await this.pool.query(
+      `
+        SELECT channel_id, channel_names.name, SUM(count) FROM user_channels
+        INNER JOIN channel_names ON channel_id=channel_names.id
+        WHERE user_id=(SELECT id FROM user_names WHERE name=$1)
+          AND timestamp BETWEEN $2 AND $3
+        GROUP BY channel_id, channel_names.name;
+    `,
+      [userName, startTimestamp, endTimestamp]
+    )
+  }
 }
