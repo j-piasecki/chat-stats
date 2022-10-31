@@ -6,6 +6,8 @@ import { createFunctions } from './createFunctions.js'
 
 import * as Query from './queries/index.js'
 
+const MAX_INTEGER = 2147483647
+
 const CONFIG = {
   user: 'chatter',
   host: 'localhost',
@@ -137,5 +139,18 @@ export class Database {
     endTimestamp = Date.now()
   ) {
     return Query.getUserMessagesCountPerChannel(this.pool, userName, startTimestamp, endTimestamp)
+  }
+
+  static async getMessagesInChannel(channelName: string, amount: number, before = MAX_INTEGER) {
+    return Query.getMessagesInChannel(this.pool, channelName, amount, before)
+  }
+
+  static async getMessagesInChannelForUsers(
+    channelName: string,
+    userNames: string[],
+    amount: number,
+    before = MAX_INTEGER
+  ) {
+    return Query.getMessagesInChannelForUsers(this.pool, channelName, userNames, amount, before)
   }
 }
