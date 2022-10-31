@@ -23,6 +23,12 @@ export class Database {
     await createFunctions(this.pool)
   }
 
+  private static flattenEmoteCounter(emotes: EmoteCounter[]) {
+    return emotes.map((counter) => {
+      return { ...counter.emote, count: counter.count }
+    })
+  }
+
   static async saveMessage(
     message: string,
     timestamp: number,
@@ -57,7 +63,7 @@ export class Database {
         moderator,
         turbo,
         firstMessage,
-        JSON.stringify(emotes),
+        JSON.stringify(this.flattenEmoteCounter(emotes)),
       ]
     )
   }

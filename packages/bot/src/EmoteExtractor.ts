@@ -20,7 +20,7 @@ export class EmoteExtractor {
       }
 
       if (count !== 0) {
-        result.push({ ...emote, count: count })
+        result.push({ emote: emote, count: count })
       }
     }
 

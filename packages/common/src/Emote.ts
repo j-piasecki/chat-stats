@@ -7,6 +7,7 @@ export interface Emote {
   urls: EmoteURLS
 }
 
-export interface EmoteCounter extends Emote {
+export interface EmoteCounter {
+  emote: Emote
   count: number
 }

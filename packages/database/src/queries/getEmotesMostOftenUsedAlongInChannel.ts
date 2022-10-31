@@ -36,10 +36,12 @@ export async function getEmotesMostOftenUsedAlongInChannel(
     .then((result) =>
       result.rows.map((row): EmoteCounter => {
         return {
-          id: row.id,
-          name: row.name,
-          urls: row.urls,
-          animated: row.animated,
+          emote: {
+            id: row.id,
+            name: row.name,
+            urls: row.urls,
+            animated: row.animated,
+          },
           count: Number(row.count),
         }
       })
