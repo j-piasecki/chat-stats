@@ -24,8 +24,8 @@ export async function createFunctions(pool: pg.Pool) {
     DECLARE
       rounded_timestamp BIGINT := (v_timestamp / 86400000) * 86400000;
       emote JSONB;
-      v_emote_id VARCHAR(64);
-      v_emote_name VARCHAR(64);
+      v_emote_id VARCHAR(128);
+      v_emote_name VARCHAR(128);
       v_emote_count INT;
       v_emote_urls JSONB;
       v_emote_animated BOOLEAN;
@@ -50,8 +50,8 @@ export async function createFunctions(pool: pg.Pool) {
       FOR emote IN SELECT * FROM jsonb_array_elements(v_emotes)
       LOOP
         FOR v_emote_id, v_emote_name, v_emote_animated, v_emote_count, v_emote_urls IN SELECT * FROM jsonb_to_record(emote) as x(
-          id VARCHAR(64),
-          name VARCHAR(64),
+          id VARCHAR(128),
+          name VARCHAR(128),
           animated BOOLEAN,
           count INT,
           urls JSONB
@@ -62,7 +62,8 @@ export async function createFunctions(pool: pg.Pool) {
           ON CONFLICT(id) DO NOTHING;
 
           INSERT INTO emotes_in_messages(message_id, emote_id, count)
-          VALUES(v_message_id, v_emote_id, v_emote_count);
+          VALUES(v_message_id, v_emote_id, v_emote_count)
+          ON CONFLICT(message_id, emote_id) DO UPDATE SET count=emotes_in_messages.count + v_emote_count;
           
           INSERT INTO emote_usage (timestamp, channel_id, user_id, emote_id, count)
           VALUES (rounded_timestamp, v_channel_id, v_user_id, v_emote_id, v_emote_count)
