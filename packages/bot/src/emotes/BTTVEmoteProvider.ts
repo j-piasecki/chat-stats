@@ -62,7 +62,7 @@ export class BTTVEmoteProvider implements EmoteProvider {
       urls: [
         `https://cdn.betterttv.net/emote/${from.id}/1x`,
         `https://cdn.betterttv.net/emote/${from.id}/2x`,
-        `https://cdn.betterttv.net/emote/${from.id}/2x`,
+        `https://cdn.betterttv.net/emote/${from.id}/3x`,
       ],
     }
   }
