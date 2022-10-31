@@ -104,4 +104,23 @@ export async function createTables(pool: pg.Pool) {
         ON DELETE CASCADE
     );
   `)
+
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS emotes_in_messages(
+      message_id INTEGER NOT NULL,
+      emote_id VARCHAR(128) NOT NULL,
+      count INT,
+
+      CONSTRAINT pk_emotes_in_messages
+        PRIMARY KEY(message_id, emote_id),
+
+      CONSTRAINT fk_message
+        FOREIGN KEY(message_id) REFERENCES messages(id)
+        ON DELETE CASCADE,
+
+      CONSTRAINT fk_emote
+        FOREIGN KEY(emote_id) REFERENCES emotes(id)
+        ON DELETE CASCADE
+    );
+  `)
 }
