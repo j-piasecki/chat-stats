@@ -4,6 +4,8 @@ import { createTables } from './createTables.js'
 import { createIndexes } from './createIndexes.js'
 import { createFunctions } from './createFunctions.js'
 
+import * as Query from './queries/index.js'
+
 const CONFIG = {
   user: 'chatter',
   host: 'localhost',
@@ -65,18 +67,7 @@ export class Database {
     startTimestamp: number,
     endTimestamp = Date.now()
   ) {
-    if (!channelName.startsWith('#')) {
-      channelName = '#' + channelName
-    }
-
-    return await this.pool.query(
-      `
-        SELECT SUM(count) AS count FROM user_channels
-        WHERE channel_id=(SELECT id FROM channel_names WHERE name=$1)
-          AND timestamp BETWEEN $2 AND $3;
-    `,
-      [channelName, startTimestamp, endTimestamp]
-    )
+    return Query.getMessageCountInChannel(this.pool, channelName, startTimestamp, endTimestamp)
   }
 
   static async getUserCountInChannel(
@@ -84,20 +75,7 @@ export class Database {
     startTimestamp: number,
     endTimestamp = Date.now()
   ) {
-    if (!channelName.startsWith('#')) {
-      channelName = '#' + channelName
-    }
-
-    return await this.pool.query(
-      `
-        SELECT COUNT(*) AS count FROM (
-          SELECT DISTINCT user_id from user_channels
-          WHERE channel_id=(SELECT id FROM channel_names WHERE name=$1)
-              AND timestamp BETWEEN $2 AND $3
-        ) as temp
-    `,
-      [channelName, startTimestamp, endTimestamp]
-    )
+    return Query.getUserCountInChannel(this.pool, channelName, startTimestamp, endTimestamp)
   }
 
   static async getSubscriberCountInChannel(
@@ -105,21 +83,7 @@ export class Database {
     startTimestamp: number,
     endTimestamp = Date.now()
   ) {
-    if (!channelName.startsWith('#')) {
-      channelName = '#' + channelName
-    }
-
-    return await this.pool.query(
-      `
-        SELECT COUNT(*) AS count FROM (
-          SELECT DISTINCT user_id FROM messages
-          WHERE channel_id=(SELECT id FROM channel_names WHERE name=$1)
-            AND subscriber=true
-            AND timestamp BETWEEN $2 AND $3
-        ) AS temp
-    `,
-      [channelName, startTimestamp, endTimestamp]
-    )
+    return Query.getSubscriberCountInChannel(this.pool, channelName, startTimestamp, endTimestamp)
   }
 
   static async getFirstTimerCountInChannel(
@@ -127,21 +91,7 @@ export class Database {
     startTimestamp: number,
     endTimestamp = Date.now()
   ) {
-    if (!channelName.startsWith('#')) {
-      channelName = '#' + channelName
-    }
-
-    return await this.pool.query(
-      `
-        SELECT COUNT(*) AS count FROM (
-          SELECT DISTINCT user_id FROM messages
-          WHERE channel_id=(SELECT id FROM channel_names WHERE name=$1)
-            AND first_message=true
-            AND timestamp BETWEEN $2 AND $3
-        ) AS temp
-    `,
-      [channelName, startTimestamp, endTimestamp]
-    )
+    return Query.getFirstTimerCountInChannel(this.pool, channelName, startTimestamp, endTimestamp)
   }
 
   static async getTotalEmoteCountInChannel(
@@ -149,18 +99,7 @@ export class Database {
     startTimestamp: number,
     endTimestamp = Date.now()
   ) {
-    if (!channelName.startsWith('#')) {
-      channelName = '#' + channelName
-    }
-
-    return await this.pool.query(
-      `
-        SELECT SUM(count) AS count from emote_usage
-        WHERE channel_id=(SELECT id FROM channel_names WHERE name=$1)
-          AND timestamp BETWEEN $2 AND $3
-    `,
-      [channelName, startTimestamp, endTimestamp]
-    )
+    return Query.getTotalEmoteCountInChannel(this.pool, channelName, startTimestamp, endTimestamp)
   }
 
   static async getMostUsedEmotesInChannel(
@@ -168,22 +107,7 @@ export class Database {
     startTimestamp: number,
     endTimestamp = Date.now()
   ) {
-    if (!channelName.startsWith('#')) {
-      channelName = '#' + channelName
-    }
-
-    return await this.pool.query(
-      `
-        SELECT emote_id AS id, emotes.name, emotes.urls, SUM(count) AS count from emote_usage
-        INNER JOIN emotes ON emote_id=emotes.id
-        WHERE channel_id=(SELECT id FROM channel_names WHERE name=$1)
-          AND timestamp BETWEEN $2 AND $3
-        GROUP BY emote_id, emotes.name, emotes.urls
-        ORDER BY SUM(count) DESC
-        LIMIT 50
-    `,
-      [channelName, startTimestamp, endTimestamp]
-    )
+    return Query.getMostUsedEmotesInChannel(this.pool, channelName, startTimestamp, endTimestamp)
   }
 
   static async getEmotesMostOftenUsedAlongInChannel(
@@ -192,29 +116,12 @@ export class Database {
     startTimestamp: number,
     endTimestamp = Date.now()
   ) {
-    if (!channelName.startsWith('#')) {
-      channelName = '#' + channelName
-    }
-
-    return await this.pool.query(
-      `
-        SELECT emotes.id, emotes.name, emotes.urls, SUM(count) as count
-        FROM emotes_in_messages
-        INNER JOIN messages ON message_id=messages.id
-        INNER JOIN emotes ON emote_id=emotes.id
-        WHERE channel_id=(SELECT id FROM channel_names WHERE name=$1)
-        AND message_id IN (
-          SELECT message_id
-          FROM emotes_in_messages
-          WHERE emote_id=$2
-        )
-        AND emote_id != $2
-        AND timestamp BETWEEN $3 AND $4
-        GROUP BY emotes.id, emotes.name, emotes.urls
-        ORDER BY SUM(count) DESC
-        LIMIT 10
-    `,
-      [channelName, emoteId, startTimestamp, endTimestamp]
+    return Query.getEmotesMostOftenUsedAlongInChannel(
+      this.pool,
+      channelName,
+      emoteId,
+      startTimestamp,
+      endTimestamp
     )
   }
 
@@ -223,15 +130,6 @@ export class Database {
     startTimestamp: number,
     endTimestamp = Date.now()
   ) {
-    return await this.pool.query(
-      `
-        SELECT channel_id AS id, channel_names.name, SUM(count) AS count FROM user_channels
-        INNER JOIN channel_names ON channel_id=channel_names.id
-        WHERE user_id=(SELECT id FROM user_names WHERE name=$1)
-          AND timestamp BETWEEN $2 AND $3
-        GROUP BY channel_id, channel_names.name;
-    `,
-      [userName, startTimestamp, endTimestamp]
-    )
+    return Query.getUserMessagesCountPerChannel(this.pool, userName, startTimestamp, endTimestamp)
   }
 }
