@@ -1,4 +1,4 @@
-import { Game, TwitchAuthHandler } from 'chat-stats-common'
+import { Game, sleep, TwitchAuthHandler } from 'chat-stats-common'
 
 const CHANNEL_GAME_REFRESH_PERIOD = 1000 * 60 * 5
 
@@ -15,8 +15,13 @@ const ERROR_GAME_DATA: Game = {
 
 export class GameRegistry {
   private channelGames: Map<string, CachedGame> = new Map()
+  private channelLocks: Map<string, boolean> = new Map()
 
   public async getChannelGame(channelId: string): Promise<Game> {
+    while (this.channelLocks.get(channelId) === true) {
+      await sleep(50)
+    }
+
     const cache = this.channelGames.get(channelId)
 
     if (cache === undefined || Date.now() - cache.timestamp > CHANNEL_GAME_REFRESH_PERIOD) {
@@ -30,6 +35,7 @@ export class GameRegistry {
         return ERROR_GAME_DATA
       }
 
+      this.channelLocks.set(channelId, true)
       console.log('Fetching game info for channel', channelId)
 
       const gameData = await fetch(`https://api.twitch.tv/helix/streams?user_id=${channelId}`, {
@@ -68,6 +74,7 @@ export class GameRegistry {
         timestamp: Date.now(),
         game: gameData,
       })
+      this.channelLocks.delete(channelId)
 
       return gameData
     } else {
