@@ -8,8 +8,8 @@ type CachedGame = {
 }
 
 const ERROR_GAME_DATA: Game = {
-  id: '-1',
-  name: 'Offline/System error',
+  id: '-2',
+  name: 'System error',
   thumbnailUrl: '',
 }
 
@@ -56,7 +56,11 @@ export class GameRegistry {
         })
         .then((result: any): Game => {
           if (result.data.length === 0) {
-            throw new Error('Channel is offline')
+            return {
+              id: '-1',
+              name: 'Offline',
+              thumbnailUrl: '',
+            }
           }
 
           return {
