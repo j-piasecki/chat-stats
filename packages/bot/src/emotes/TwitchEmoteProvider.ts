@@ -6,6 +6,11 @@ import { EmoteProvider } from './EmoteProvider.js'
 
 export class TwitchEmoteProvider implements EmoteProvider {
   async getGlobalEmotes(): Promise<Emote[]> {
+    if (TwitchAuthHandler.token === undefined) {
+      console.log('Skipping fetching global Twitch emotes: not authenticated')
+      return []
+    }
+
     return fetch('https://api.twitch.tv/helix/chat/emotes/global', {
       method: 'get',
       headers: {
@@ -32,6 +37,11 @@ export class TwitchEmoteProvider implements EmoteProvider {
   }
 
   async getChannelEmotes(channelId: string): Promise<Emote[]> {
+    if (TwitchAuthHandler.token === undefined) {
+      console.log(`Skipping fetching Twitch emotes for channel ${channelId}: not authenticated`)
+      return []
+    }
+
     return fetch(`https://api.twitch.tv/helix/chat/emotes?broadcaster_id=${channelId}`, {
       method: 'get',
       headers: {

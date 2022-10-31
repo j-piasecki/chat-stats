@@ -7,6 +7,12 @@ type CachedGame = {
   game: Game
 }
 
+const ERROR_GAME_DATA: Game = {
+  id: '-1',
+  name: 'Offline/System error',
+  thumbnailUrl: '',
+}
+
 export class GameRegistry {
   private channelGames: Map<string, CachedGame> = new Map()
 
@@ -14,6 +20,16 @@ export class GameRegistry {
     const cache = this.channelGames.get(channelId)
 
     if (cache === undefined || Date.now() - cache.timestamp > CHANNEL_GAME_REFRESH_PERIOD) {
+      if (TwitchAuthHandler.token === undefined) {
+        console.log(`Skipping fetching game data for channel ${channelId}: not authenticated`)
+
+        this.channelGames.set(channelId, {
+          timestamp: Date.now(),
+          game: ERROR_GAME_DATA,
+        })
+        return ERROR_GAME_DATA
+      }
+
       console.log('Fetching game info for channel', channelId)
 
       const gameData = await fetch(`https://api.twitch.tv/helix/streams?user_id=${channelId}`, {
@@ -45,11 +61,7 @@ export class GameRegistry {
         })
         .catch((reason: any): Game => {
           console.log('Could not get game data for channel', channelId, reason.message)
-          return {
-            id: '-1',
-            name: 'Offline/System error',
-            thumbnailUrl: '',
-          }
+          return ERROR_GAME_DATA
         })
 
       this.channelGames.set(channelId, {
