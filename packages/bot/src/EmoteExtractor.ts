@@ -1,4 +1,4 @@
-import { EmoteCounter } from 'chat-stats-database'
+import { EmoteCounter } from 'chat-stats-common'
 import type tmi from 'tmi.js'
 import { EmoteRegistry } from './emotes/EmoteRegistry.js'
 

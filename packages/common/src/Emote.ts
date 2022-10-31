@@ -6,3 +6,7 @@ export interface Emote {
   animated: boolean
   urls: EmoteURLS
 }
+
+export interface EmoteCounter extends Emote {
+  count: number
+}

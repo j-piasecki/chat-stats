@@ -1,5 +1,5 @@
 import pg from 'pg'
-import { EmoteCounter } from './EmoteCounter.js'
+import { EmoteCounter } from 'chat-stats-common'
 import { createTables } from './createTables.js'
 import { createIndexes } from './createIndexes.js'
 import { createFunctions } from './createFunctions.js'
