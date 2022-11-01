@@ -21,7 +21,17 @@ export class EmoteRegistry {
 
   public async getEmotesForChannel(channelId: string): Promise<Emote[]> {
     return await Promise.all([this.getGlobalEmotes(), this.getChannelEmotes(channelId)]).then(
-      (data) => data.flat()
+      (data) => {
+        const result = [...data[1]]
+
+        for (const emote of data[0]) {
+          if (result.find((e) => e.name === emote.name) === undefined) {
+            result.push(emote)
+          }
+        }
+
+        return result
+      }
     )
   }
 
