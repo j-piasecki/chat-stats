@@ -4,7 +4,16 @@ import http from 'http'
 import https from 'https'
 import fs from 'fs'
 
+import { getEmotesMostOftenUsedAlongInChannel } from './getEmotesMostOftenUsedAlongInChannel.js'
+import { getFirstTimerCountInChannel } from './getFirstTimerCountInChannel.js'
+import { getMessageCountInChannel } from './getMessageCountInChannel.js'
 import { getMessagesInChannel } from './getMessagesInChannel.js'
+import { getMessagesInChannelForUsers } from './getMessagesInChannelForUsers.js'
+import { getMostUsedEmotesInChannel } from './getMostUsedEmotesInChannel.js'
+import { getSubscriberCountInChannel } from './getSubscriberCountInChannel.js'
+import { getTotalEmoteCountInChannel } from './getTotalEmoteCountInChannel.js'
+import { getUserCountInChannel } from './getUserCountInChannel.js'
+import { getUserMessagesCountPerChannel } from './getUserMessagesCountPerChannel.js'
 
 export interface APIConfig {
   http?: {
@@ -22,7 +31,16 @@ const config: APIConfig = JSON.parse(fs.readFileSync('config.json', 'utf-8'))
 const app = express()
 app.use(cors())
 
+app.get('/mostUsedEmoteAlong/:channel/emote/:emote', getEmotesMostOftenUsedAlongInChannel)
+app.get('/firstTimers/:channel', getFirstTimerCountInChannel)
+app.get('/messageCount/:channel', getMessageCountInChannel)
 app.get('/channel/:channel', getMessagesInChannel)
+app.get('/channel/:channel/users/:user/*', getMessagesInChannelForUsers)
+app.get('/mostUsedEmotes/:channel', getMostUsedEmotesInChannel)
+app.get('/subscriberCount/:channel', getSubscriberCountInChannel)
+app.get('/emoteCount/:channel', getTotalEmoteCountInChannel)
+app.get('/userCount/:channel', getUserCountInChannel)
+app.get('/messageCountPerChannel/:user', getUserMessagesCountPerChannel)
 
 if (config.http) {
   const httpServer = http.createServer(app)
