@@ -27,7 +27,6 @@ const eavesdropper = new Eavesdropper((channel, user, message) => {
       user.username!,
       game.id,
       game.name,
-      game.thumbnailUrl,
       user.subscriber ?? false,
       user.mod ?? false,
       user.turbo ?? false,

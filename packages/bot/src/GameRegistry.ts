@@ -10,7 +10,6 @@ type CachedGame = {
 const ERROR_GAME_DATA: Game = {
   id: '-2',
   name: 'System error',
-  thumbnailUrl: '',
 }
 
 export class GameRegistry {
@@ -59,14 +58,12 @@ export class GameRegistry {
             return {
               id: '-1',
               name: 'Offline',
-              thumbnailUrl: '',
             }
           }
 
           return {
             id: result.data[0].game_id,
             name: result.data[0].game_name,
-            thumbnailUrl: result.data[0].thumbnail_url,
           }
         })
         .catch((reason: any): Game => {

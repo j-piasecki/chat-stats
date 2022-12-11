@@ -11,7 +11,6 @@ export async function createFunctions(pool: pg.Pool) {
       v_user_name VARCHAR(50),
       v_game_id INT,
       v_game_name VARCHAR(1024),
-      v_game_thumbnail_url VARCHAR(4096),
       v_subscriber BOOLEAN,
       v_moderator BOOLEAN,
       v_turbo BOOLEAN,
@@ -31,9 +30,9 @@ export async function createFunctions(pool: pg.Pool) {
       v_emote_animated BOOLEAN;
       v_message_id INT;
     BEGIN
-      INSERT INTO games (id, name, thumbnail_url)
-        VALUES (v_game_id, v_game_name, v_game_thumbnail_url)
-        ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name, thumbnail_url = EXCLUDED.thumbnail_url;
+      INSERT INTO games (id, name)
+        VALUES (v_game_id, v_game_name)
+        ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name;
       INSERT INTO channel_names (id, name)
         VALUES (v_channel_id, v_channel_name)
         ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name;

@@ -40,7 +40,6 @@ export class Database {
     userName: string,
     gameId: string,
     gameName: string,
-    gameThumbnailUrl: string,
     subscriber: boolean,
     moderator: boolean,
     turbo: boolean,
@@ -49,7 +48,7 @@ export class Database {
   ) {
     this.pool.query(
       `
-        SELECT save_message($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14::jsonb);
+        SELECT save_message($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13::jsonb);
     `,
       [
         message,
@@ -60,7 +59,6 @@ export class Database {
         userName,
         gameId,
         gameName,
-        gameThumbnailUrl,
         subscriber,
         moderator,
         turbo,

@@ -13,8 +13,7 @@ export async function createTables(pool: pg.Pool) {
   await pool.query(`
     CREATE TABLE IF NOT EXISTS games(
       id INTEGER PRIMARY KEY,
-      name VARCHAR(1024) NOT NULL,
-      thumbnail_url VARCHAR(4096) NOT NULL
+      name VARCHAR(1024) NOT NULL
     );
   `)
 
