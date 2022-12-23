@@ -7,10 +7,10 @@ import {
   MIN_REQUESTED_MESSAGES,
   MAX_REQUESTED_MESSAGES,
   MAX_INT,
-} from './utils.js'
+} from '../utils.js'
 
-// /channel/:channel
-export function getMessagesInChannel(req: Request, res: Response) {
+// /channel/:channel/users/:user1/:user2/...
+export function getMessagesInChannelForUsers(req: Request, res: Response) {
   const response: { messages: Message[]; end: boolean } = { messages: [], end: false }
   const amount = clamp(
     // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
@@ -21,6 +21,7 @@ export function getMessagesInChannel(req: Request, res: Response) {
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   const lastMessage = Math.floor(Number(req.query.last)) || MAX_INT
   const channel = req.params.channel
+  const users = [req.params.user, ...req.params[0].split('/').filter((x) => x.length > 0)]
 
   if (Number.isNaN(lastMessage) || Number.isNaN(amount)) {
     res.status(400).end()
@@ -28,7 +29,7 @@ export function getMessagesInChannel(req: Request, res: Response) {
   }
 
   // fetch one more message than requested to see if we reached the end of history
-  Database.getMessagesInChannel(channel, amount + 1, lastMessage)
+  Database.getMessagesInChannelForUsers(channel, users, amount + 1, lastMessage)
     .then((messages) => {
       // don't return the additional message
       const countToReturn = messages.length - 1 === amount ? amount : messages.length
