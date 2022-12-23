@@ -16,4 +16,8 @@ export abstract class StatsRegistry {
       return result
     }
   }
+
+  public static async resolveAll(...queries: QueryObject<unknown>[]): Promise<unknown[]> {
+    return await Promise.all(queries.map((query) => StatsRegistry.resolve(query)))
+  }
 }

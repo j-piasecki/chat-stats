@@ -4,6 +4,7 @@ import http from 'http'
 import https from 'https'
 import fs from 'fs'
 
+import { extractTimestamps } from './utils.js'
 import { getEmotesMostOftenUsedAlongInChannel } from './endpoints/getEmotesMostOftenUsedAlongInChannel.js'
 import { getFirstTimerCountInChannel } from './endpoints/getFirstTimerCountInChannel.js'
 import { getMessageCountInChannel } from './endpoints/getMessageCountInChannel.js'
@@ -14,7 +15,7 @@ import { getSubscriberCountInChannel } from './endpoints/getSubscriberCountInCha
 import { getTotalEmoteCountInChannel } from './endpoints/getTotalEmoteCountInChannel.js'
 import { getUserCountInChannel } from './endpoints/getUserCountInChannel.js'
 import { getUserMessagesCountPerChannel } from './endpoints/getUserMessagesCountPerChannel.js'
-import { extractTimestamps } from './utils.js'
+import { getChannelStats } from './endpoints/getChannelStats.js'
 
 export interface APIConfig {
   http?: {
@@ -43,6 +44,7 @@ app.get('/subscriberCount/:channel', getSubscriberCountInChannel)
 app.get('/emoteCount/:channel', getTotalEmoteCountInChannel)
 app.get('/userCount/:channel', getUserCountInChannel)
 app.get('/messageCountPerChannel/:user', getUserMessagesCountPerChannel)
+app.get('/stats/:channel', getChannelStats)
 
 if (config.http) {
   const httpServer = http.createServer(app)
