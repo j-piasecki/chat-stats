@@ -6,8 +6,8 @@ import { Request, Response } from 'express'
 export function getUserMessagesCountPerChannel(req: Request, res: Response) {
   const user = req.params.user
 
-  const endTimestamp = Math.floor(Number(req.query.before)) || Date.now()
-  const startTimestamp = Math.floor(Number(req.query.after)) || endTimestamp - 24 * 60 * 60 * 1000
+  const endTimestamp = Math.floor(Number(req.query.before))
+  const startTimestamp = Math.floor(Number(req.query.after))
 
   Database.getUserMessagesCountPerChannel(user, startTimestamp, endTimestamp)
     .then((count) => {

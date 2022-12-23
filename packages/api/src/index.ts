@@ -14,6 +14,7 @@ import { getSubscriberCountInChannel } from './getSubscriberCountInChannel.js'
 import { getTotalEmoteCountInChannel } from './getTotalEmoteCountInChannel.js'
 import { getUserCountInChannel } from './getUserCountInChannel.js'
 import { getUserMessagesCountPerChannel } from './getUserMessagesCountPerChannel.js'
+import { extractTimestamps } from './utils.js'
 
 export interface APIConfig {
   http?: {
@@ -30,6 +31,7 @@ const config: APIConfig = JSON.parse(fs.readFileSync('config.json', 'utf-8'))
 
 const app = express()
 app.use(cors())
+app.use(extractTimestamps)
 
 app.get('/mostUsedEmoteAlong/:channel/emote/:emote', getEmotesMostOftenUsedAlongInChannel)
 app.get('/firstTimers/:channel', getFirstTimerCountInChannel)

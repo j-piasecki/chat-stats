@@ -7,8 +7,8 @@ export function getEmotesMostOftenUsedAlongInChannel(req: Request, res: Response
   const channel = req.params.channel
   const emoteId = req.params.emote
 
-  const endTimestamp = Math.floor(Number(req.query.before)) || Date.now()
-  const startTimestamp = Math.floor(Number(req.query.after)) || endTimestamp - 24 * 60 * 60 * 1000
+  const endTimestamp = Math.floor(Number(req.query.before))
+  const startTimestamp = Math.floor(Number(req.query.after))
 
   Database.getEmotesMostOftenUsedAlongInChannel(channel, emoteId, startTimestamp, endTimestamp)
     .then((emoteCounter) => {
