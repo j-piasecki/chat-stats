@@ -2,6 +2,7 @@ import { UserMessagesCountPerChannelQuery } from './UserMessagesCountPerChannelQ
 import { UserCountInChannel } from './UserCountInChannel.js'
 import { TotalEmoteCountInChannel } from './TotalEmoteCountInChannel.js'
 import { SubscriberCountInChannel } from './SubscriberCountInChannel.js'
+import { MostUsedEmotesInChannel } from './MostUsedEmotesInChannel.js'
 
 export abstract class Query {
   public static userMessagesCountPerChannelQuery() {
@@ -18,5 +19,9 @@ export abstract class Query {
 
   public static subscriberCountInChannel() {
     return new SubscriberCountInChannel()
+  }
+
+  public static mostUsedEmotesInChannel() {
+    return new MostUsedEmotesInChannel()
   }
 }
