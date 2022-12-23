@@ -1,6 +1,7 @@
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-import { Database } from 'chat-stats-database'
 import { Request, Response } from 'express'
+
+import { Query } from '../query/Query.js'
+import { StatsRegistry } from '../StatsRegistry.js'
 
 // /userCount/:channel
 export function getUserCountInChannel(req: Request, res: Response) {
@@ -8,8 +9,15 @@ export function getUserCountInChannel(req: Request, res: Response) {
 
   const endTimestamp = Math.floor(Number(req.query.before))
   const startTimestamp = Math.floor(Number(req.query.after))
+  const period = Math.floor(Number(req.query.period))
 
-  Database.getUserCountInChannel(channel, startTimestamp, endTimestamp)
+  const query = Query.userCountInChannel()
+    .forChannel(channel)
+    .before(endTimestamp)
+    .after(startTimestamp)
+    .forPeriod(period)
+
+  StatsRegistry.resolve(query)
     .then((count) => {
       res
         .status(200)

@@ -1,5 +1,6 @@
 import { QueryObject } from './query/QueryObject.js'
 import { isUserMessagesCountPerChannelQuery } from './query/UserMessagesCountPerChannelQuery.js'
+import { isUserCountInChannel } from './query/UserCountInChannel.js'
 
 function periodToCacheLifespan(period: number): number {
   switch (period) {
@@ -39,22 +40,45 @@ export class StatsCache {
           return periodCache.data
         }
       }
+    } else if (isUserCountInChannel(query)) {
+      // basically check if queryCache[channel][period] exists and is up-to-date-ish
+      const channelCache = queryCache[query.channel]
+
+      if (channelCache !== undefined) {
+        const periodCache = channelCache[query.period]
+
+        if (
+          periodCache !== undefined &&
+          Date.now() - periodCache.timestamp < periodToCacheLifespan(query.period)
+        ) {
+          return periodCache.data
+        }
+      }
     }
 
     return null
   }
 
   public save<T>(query: QueryObject<T>, data: T) {
-    if (isUserMessagesCountPerChannelQuery(query)) {
-      if (this.cache[query.type] === undefined) {
-        this.cache[query.type] = {}
-      }
+    if (this.cache[query.type] === undefined) {
+      this.cache[query.type] = {}
+    }
 
+    if (isUserMessagesCountPerChannelQuery(query)) {
       if (this.cache[query.type][query.user] === undefined) {
         this.cache[query.type][query.user] = {}
       }
 
       this.cache[query.type][query.user][query.period] = {
+        data: data,
+        timestamp: Date.now(),
+      }
+    } else if (isUserCountInChannel(query)) {
+      if (this.cache[query.type][query.channel] === undefined) {
+        this.cache[query.type][query.channel] = {}
+      }
+
+      this.cache[query.type][query.channel][query.period] = {
         data: data,
         timestamp: Date.now(),
       }
