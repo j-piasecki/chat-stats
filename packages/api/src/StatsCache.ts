@@ -2,6 +2,7 @@ import { QueryObject } from './query/QueryObject.js'
 import { isUserMessagesCountPerChannelQuery } from './query/UserMessagesCountPerChannelQuery.js'
 import { isUserCountInChannel } from './query/UserCountInChannel.js'
 import { isTotalEmoteCountInChannel } from './query/TotalEmoteCountInChannel.js'
+import { isSubscriberCountInChannel } from './query/SubscriberCountInChannel.js'
 
 function periodToCacheLifespan(period: number): number {
   switch (period) {
@@ -41,7 +42,11 @@ export class StatsCache {
           return periodCache.data
         }
       }
-    } else if (isUserCountInChannel(query) || isTotalEmoteCountInChannel(query)) {
+    } else if (
+      isUserCountInChannel(query) ||
+      isTotalEmoteCountInChannel(query) ||
+      isSubscriberCountInChannel(query)
+    ) {
       // basically check if queryCache[channel][period] exists and is up-to-date-ish
       const channelCache = queryCache[query.channel]
 
@@ -74,7 +79,11 @@ export class StatsCache {
         data: data,
         timestamp: Date.now(),
       }
-    } else if (isUserCountInChannel(query) || isTotalEmoteCountInChannel(query)) {
+    } else if (
+      isUserCountInChannel(query) ||
+      isTotalEmoteCountInChannel(query) ||
+      isSubscriberCountInChannel(query)
+    ) {
       if (this.cache[query.type][query.channel] === undefined) {
         this.cache[query.type][query.channel] = {}
       }
