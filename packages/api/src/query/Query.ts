@@ -5,6 +5,7 @@ import { SubscriberCountInChannel } from './SubscriberCountInChannel.js'
 import { MostUsedEmotesInChannel } from './MostUsedEmotesInChannel.js'
 import { MessageCountInChannel } from './MessageCountInChannel.js'
 import { FirstTimerCountInChannel } from './FirstTimerCountInChannel.js'
+import { EmotesMostOftenUsedAlongInChannel } from './EmotesMostOftenUsedAlongInChannel.js'
 
 export abstract class Query {
   public static userMessagesCountPerChannelQuery() {
@@ -33,5 +34,9 @@ export abstract class Query {
 
   public static firstTimerCountInChannel() {
     return new FirstTimerCountInChannel()
+  }
+
+  public static emotesMostOftenUsedAlongInChannel() {
+    return new EmotesMostOftenUsedAlongInChannel()
   }
 }

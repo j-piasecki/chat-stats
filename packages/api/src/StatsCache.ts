@@ -6,6 +6,7 @@ import { isSubscriberCountInChannel } from './query/SubscriberCountInChannel.js'
 import { isMostUsedEmotesInChannel } from './query/MostUsedEmotesInChannel.js'
 import { isMessageCountInChannel } from './query/MessageCountInChannel.js'
 import { isFirstTimerCountInChannel } from './query/FirstTimerCountInChannel.js'
+import { isEmotesMostOftenUsedAlongInChannel } from './query/EmotesMostOftenUsedAlongInChannel.js'
 
 function periodToCacheLifespan(period: number): number {
   switch (period) {
@@ -66,6 +67,24 @@ export class StatsCache {
           return periodCache.data
         }
       }
+    } else if (isEmotesMostOftenUsedAlongInChannel(query)) {
+      // basically check if queryCache[channel][emoteId][period] exists and is up-to-date-ish
+      const channelCache = queryCache[query.channel]
+
+      if (channelCache !== undefined) {
+        const emoteCache = channelCache[query.emoteId]
+
+        if (emoteCache !== undefined) {
+          const periodCache = emoteCache[query.period]
+
+          if (
+            periodCache !== undefined &&
+            Date.now() - periodCache.timestamp < periodToCacheLifespan(query.period)
+          ) {
+            return periodCache.data
+          }
+        }
+      }
     }
 
     return null
@@ -98,6 +117,19 @@ export class StatsCache {
       }
 
       this.cache[query.type][query.channel][query.period] = {
+        data: data,
+        timestamp: Date.now(),
+      }
+    } else if (isEmotesMostOftenUsedAlongInChannel(query)) {
+      if (this.cache[query.type][query.channel] === undefined) {
+        this.cache[query.type][query.channel] = {}
+      }
+
+      if (this.cache[query.type][query.channel][query.emoteId] === undefined) {
+        this.cache[query.type][query.channel][query.emoteId] = {}
+      }
+
+      this.cache[query.type][query.channel][query.emoteId][query.period] = {
         data: data,
         timestamp: Date.now(),
       }

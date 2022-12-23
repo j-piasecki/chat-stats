@@ -1,6 +1,7 @@
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-import { Database } from 'chat-stats-database'
 import { Request, Response } from 'express'
+
+import { Query } from '../query/Query.js'
+import { StatsRegistry } from '../StatsRegistry.js'
 
 // /mostUsedEmoteAlong/:channel/emote/:emoteId
 export function getEmotesMostOftenUsedAlongInChannel(req: Request, res: Response) {
@@ -9,8 +10,16 @@ export function getEmotesMostOftenUsedAlongInChannel(req: Request, res: Response
 
   const endTimestamp = Math.floor(Number(req.query.before))
   const startTimestamp = Math.floor(Number(req.query.after))
+  const period = Math.floor(Number(req.query.period))
 
-  Database.getEmotesMostOftenUsedAlongInChannel(channel, emoteId, startTimestamp, endTimestamp)
+  const query = Query.emotesMostOftenUsedAlongInChannel()
+    .forChannel(channel)
+    .forEmote(emoteId)
+    .before(endTimestamp)
+    .after(startTimestamp)
+    .forPeriod(period)
+
+  StatsRegistry.resolve(query)
     .then((emoteCounter) => {
       res
         .status(200)
