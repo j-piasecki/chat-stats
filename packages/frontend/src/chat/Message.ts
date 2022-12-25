@@ -1,16 +1,7 @@
 import '@zapp-framework/web'
-import {
-  Row,
-  RowConfig,
-  TextConfig,
-  Alignment,
-  Stack,
-  StackConfig,
-  remember,
-} from '@zapp-framework/core'
+import { Row, RowConfig, TextConfig, Alignment, Stack, StackConfig } from '@zapp-framework/core'
+import { Text } from '@zapp-framework/ui'
 import { Message as MessageType } from 'chat-stats-common'
-
-import { Text } from '../Text'
 
 export function Message(message: MessageType) {
   Stack(StackConfig(`#message-${message.id}-wrapper`).padding(4), () => {
