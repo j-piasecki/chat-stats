@@ -95,7 +95,7 @@ function EmoteRow(
               .padding(8, 0, 0, 0),
             () => {
               Image(
-                ImageConfig(`#emote-row-${counter.emote.id}-image`).width(64).height(32),
+                ImageConfig(`#emote-row-${counter.emote.id}-image`).width(96).height(32),
                 counter.emote.urls[0]
               )
 
