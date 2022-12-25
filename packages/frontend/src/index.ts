@@ -7,6 +7,7 @@ import { ChatWindow } from './chat'
 import { EmotesUsedTogether } from './channel/EmotesUsedTogether'
 
 Zapp.startLoop()
+Zapp.setValue('DATA_PERIOD', 7)
 
 registerNavigationRoutes('home', {
   home: Home,

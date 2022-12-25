@@ -1,6 +1,7 @@
 import '@zapp-framework/web'
 import {
   Alignment,
+  Arrangement,
   Column,
   ColumnConfig,
   Navigator,
@@ -12,6 +13,7 @@ import {
   StackAlignment,
   StackConfig,
   TextConfig,
+  Zapp,
 } from '@zapp-framework/core'
 import { Channel as ChannelType, ChannelStats, Emote, EmoteCounter } from 'chat-stats-common'
 import {
@@ -25,6 +27,7 @@ import {
 import config from '../config.json'
 import { ChannelStatsView } from './ChannelStats'
 import { EmoteStatsView } from './EmoteStats'
+import { PeriodPicker } from './PeriodPicker'
 
 export function EmotesUsedTogether(args: {
   channel: ChannelType
@@ -33,6 +36,7 @@ export function EmotesUsedTogether(args: {
 }) {
   Stack(StackConfig('#emotes-used-together-screen-wrapper').background(0x222222).fillSize(), () => {
     const oftenUsed = remember<EmoteCounter[] | null>(null)
+    const period = remember(Zapp.getValue('DATA_PERIOD') as number)
     const containerConfig = ColumnConfig('#emotes-used-together-screen').fillSize().padding(32, 0)
 
     if (oftenUsed.value === null) {
@@ -41,18 +45,19 @@ export function EmotesUsedTogether(args: {
 
     Column(containerConfig, () => {
       sideEffect(() => {
+        oftenUsed.value = null
         fetch(
           `//${config.endpoint}/mostUsedEmoteAlong/${args.channel.name.substring(1)}/emote/${
             args.emote.id
-          }?period=7d`
+          }?period=${period.value}d`
         )
           .then((e) => e.json())
           .then((stats) => {
             oftenUsed.value = stats.emotes
           })
-      })
+      }, period.value)
 
-      Stack(StackConfig('#channel-header').fillWidth(), () => {
+      Stack(StackConfig('#channel-header').fillWidth().alignment(StackAlignment.Center), () => {
         Stack(
           StackConfig('#channel-name-container')
             .fillWidth()
@@ -62,15 +67,30 @@ export function EmotesUsedTogether(args: {
             Text(TextConfig('#channel-name'), args.channel.name.substring(1))
           }
         )
+
         Stack(
-          StackConfig('#channel-actions-container').fillWidth().alignment(StackAlignment.TopEnd),
+          StackConfig('#channel-actions-container').fillWidth().alignment(StackAlignment.CenterEnd),
           () => {
-            Button(
-              ButtonConfig('button').onPress(() => {
-                Navigator.navigate('chat', args)
-              }),
+            Column(
+              ColumnConfig('test')
+                .height(100)
+                .padding(0, 0, 8, 0)
+                .arrangement(Arrangement.SpaceBetween)
+                .alignment(Alignment.End),
               () => {
-                Text(TextConfig('#chat-text').textSize(12), 'Chat')
+                Button(
+                  ButtonConfig('button').onPress(() => {
+                    Navigator.navigate('chat', args)
+                  }),
+                  () => {
+                    Text(TextConfig('#chat-text').textSize(12), 'Chat')
+                  }
+                )
+
+                PeriodPicker(period.value, (selected) => {
+                  Zapp.setValue('DATA_PERIOD', selected)
+                  period.value = selected
+                })
               }
             )
           }
