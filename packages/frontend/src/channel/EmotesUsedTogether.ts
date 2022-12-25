@@ -101,6 +101,7 @@ export function EmotesUsedTogether(args: {
       Stack(
         StackConfig('#most-used-together-text-wrapper')
           .fillWidth()
+          .padding(0, 0, 0, 24)
           .alignment(StackAlignment.Center),
         () => {
           Text(
