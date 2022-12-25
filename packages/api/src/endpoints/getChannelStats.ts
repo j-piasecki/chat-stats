@@ -17,6 +17,7 @@ export function getChannelStats(req: Request, res: Response) {
     Query.subscriberCountInChannel(),
     Query.totalEmoteCountInChannel(),
     Query.userCountInChannel(),
+    Query.mostUsedEmotesInChannel(),
   ]
 
   for (const query of queries) {
@@ -34,6 +35,7 @@ export function getChannelStats(req: Request, res: Response) {
             subscriberCount: result[2],
             totalEmoteCount: result[3],
             userCount: result[4],
+            mostUsedemotes: result[5],
           })
         )
         .end()
