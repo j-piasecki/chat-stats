@@ -6,5 +6,5 @@ export interface ChannelStats {
   subscriberCount: number
   totalEmoteCount: number
   userCount: number
-  mostUsedemotes: EmoteCounter[]
+  mostUsedEmotes: EmoteCounter[]
 }

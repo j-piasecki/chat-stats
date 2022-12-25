@@ -38,7 +38,7 @@ export function ChannelStatsView(stats: ChannelStats) {
       RowConfig('#channel-stats-container')
         .fillWidth()
         .arrangement(Arrangement.SpaceAround)
-        .padding(0, 32, 0, 24),
+        .padding(0, 32, 0, 40),
       () => {
         DisplayStat('Nowi widzowie', stats.firstTimersCount)
         DisplayStat('Liczba wiadomości', stats.messageCount)

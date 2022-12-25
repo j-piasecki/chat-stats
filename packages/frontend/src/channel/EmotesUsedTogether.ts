@@ -13,7 +13,7 @@ import {
   StackConfig,
   TextConfig,
 } from '@zapp-framework/core'
-import { Channel as ChannelType, ChannelStats, EmoteCounter } from 'chat-stats-common'
+import { Channel as ChannelType, ChannelStats, Emote, EmoteCounter } from 'chat-stats-common'
 import {
   ActivityIndicator,
   ActivityIndicatorConfig,
@@ -26,21 +26,29 @@ import config from '../config.json'
 import { ChannelStatsView } from './ChannelStats'
 import { EmoteStatsView } from './EmoteStats'
 
-export function Channel(args: { channel: ChannelType }) {
-  Stack(StackConfig('#channel-screen-wrapper').background(0x222222).fillSize(), () => {
-    const stats = remember<ChannelStats | null>(null)
-    const containerConfig = ColumnConfig('#channel-screen').fillSize().padding(32, 0)
+export function EmotesUsedTogether(args: {
+  channel: ChannelType
+  stats: ChannelStats
+  emote: Emote
+}) {
+  Stack(StackConfig('#emotes-used-together-screen-wrapper').background(0x222222).fillSize(), () => {
+    const oftenUsed = remember<EmoteCounter[] | null>(null)
+    const containerConfig = ColumnConfig('#emotes-used-together-screen').fillSize().padding(32, 0)
 
-    if (stats.value === null) {
+    if (oftenUsed.value === null) {
       containerConfig.alignment(Alignment.Center)
     }
 
     Column(containerConfig, () => {
       sideEffect(() => {
-        fetch(`//${config.endpoint}/stats/${args.channel.name.substring(1)}/?period=7d`)
+        fetch(
+          `//${config.endpoint}/mostUsedEmoteAlong/${args.channel.name.substring(1)}/emote/${
+            args.emote.id
+          }?period=7d`
+        )
           .then((e) => e.json())
-          .then((stats_: ChannelStats) => {
-            stats.value = stats_
+          .then((stats) => {
+            oftenUsed.value = stats.emotes
           })
       })
 
@@ -69,19 +77,28 @@ export function Channel(args: { channel: ChannelType }) {
         )
       })
 
-      if (stats.value === null) {
+      ChannelStatsView(args.stats)
+      Stack(
+        StackConfig('#most-used-together-text-wrapper')
+          .fillWidth()
+          .alignment(StackAlignment.Center),
+        () => {
+          Text(
+            TextConfig('#most-used-together-text').alignment(Alignment.Center),
+            `Emotki najczęściej używane z ${args.emote.name}`
+          )
+        }
+      )
+
+      if (oftenUsed.value === null) {
         Stack(StackConfig('#stats-loading-wrapper').padding(64), () => {
           ActivityIndicator(ActivityIndicatorConfig('#stats-loading'))
         })
       } else {
-        ChannelStatsView(stats.value!)
-        EmoteStatsView(stats.value!.mostUsedEmotes, stats.value!.totalEmoteCount, (emote) => {
-          Navigator.navigate('emotesUsedTogether', {
-            channel: args.channel,
-            stats: stats.value!,
-            emote: emote,
-          })
-        })
+        EmoteStatsView(
+          oftenUsed.value,
+          args.stats.mostUsedEmotes.find((counter) => counter.emote.id === args.emote.id)!.count
+        )
       }
     })
   })

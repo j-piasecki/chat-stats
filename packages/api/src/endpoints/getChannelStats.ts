@@ -33,7 +33,7 @@ export function getChannelStats(req: Request, res: Response) {
         subscriberCount: result[2] as number,
         totalEmoteCount: result[3] as number,
         userCount: result[4] as number,
-        mostUsedemotes: result[5] as EmoteCounter[],
+        mostUsedEmotes: result[5] as EmoteCounter[],
       }
 
       res.status(200).send(JSON.stringify(body)).end()
