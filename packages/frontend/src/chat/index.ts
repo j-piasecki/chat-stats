@@ -20,19 +20,24 @@ import config from '../config.json'
 export function ChatWindow(args: { channel: Channel }) {
   Stack(StackConfig('#chat-window-wrapper').fillWidth().alignment(StackAlignment.TopCenter), () => {
     const messages = remember<MessageType[]>([])
+    const needsFetch = remember(true)
+    const lastMessage = remember(2147483647)
 
-    sideEffect(() => {
-      fetch(`//${config.endpoint}/channel/${args.channel.name.substring(1)}/`)
-        .then((e) => e.json())
-        .then((m) => {
-          messages.value = [
-            ...m.messages,
-            ...m.messages.map((x: any) => {
-              return { ...x, id: x.id + 30 }
-            }),
-          ]
-        })
-    }, args.channel.name)
+    sideEffect(
+      () => {
+        if (needsFetch.value) {
+          fetch(`//${config.endpoint}/channel/${args.channel.name.substring(1)}/`)
+            .then((e) => e.json())
+            .then((data) => {
+              messages.value = [...messages.value, ...data.messages]
+              lastMessage.value = data.messages[data.messages.length - 1].id
+              needsFetch.value = false
+            })
+        }
+      },
+      args.channel.name,
+      needsFetch.value
+    )
 
     const chatWindowConfig = ColumnConfig('#chat-window').background(0x1a1a1a)
     if (Zapp.screenWidth < 500) {
@@ -57,7 +62,13 @@ export function ChatWindow(args: { channel: Channel }) {
       }
 
       const element = document.documentElement
-      console.log(Math.abs(element.scrollHeight - element.clientHeight - element.scrollTop) < 1)
+      if (
+        !needsFetch.value &&
+        messages.value.length > 0 &&
+        Math.abs(element.scrollHeight - element.clientHeight - element.scrollTop) < 400
+      ) {
+        needsFetch.value = true
+      }
     })
   })
 }
