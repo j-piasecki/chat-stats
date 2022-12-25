@@ -8,7 +8,6 @@ let cacheTimestamp = 0
 // /trackedChannels/
 export function getTrackedChannels(req: Request, res: Response) {
   if (Date.now() - cacheTimestamp < 24 * 60 * 60 * 1000) {
-    console.log('cache hit')
     res
       .status(200)
       .send(
