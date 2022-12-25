@@ -35,6 +35,7 @@ function Channel(channel: ChannelType) {
         })
         .onPointerUp(() => {
           if (pressed.value) {
+            hovered.value = false
             pressed.value = false
             Navigator.navigate('channel', {
               channel: channel,

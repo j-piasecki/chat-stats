@@ -4,11 +4,14 @@ import { Text } from '@zapp-framework/ui'
 import { Message as MessageType } from 'chat-stats-common'
 
 export function Message(message: MessageType) {
-  Stack(StackConfig(`#message-${message.id}-wrapper`).padding(4), () => {
+  Stack(StackConfig(`#message-${message.id}-wrapper`).padding(4, 16), () => {
     Row(RowConfig(`#message-${message.id}`).fillWidth().alignment(Alignment.Center), () => {
       Text(TextConfig(`#message-${message.id}-user`).textSize(18), message.user.name + ':')
       Stack(StackConfig(`#message-${message.id}-spacer`).weight(1).padding(2, 6), () => {
-        Text(TextConfig(`#message-${message.id}-content`).textSize(16), message.message)
+        Text(
+          TextConfig(`#message-${message.id}-content`).textSize(16).offset(0, 1),
+          message.message
+        )
       })
     })
   })

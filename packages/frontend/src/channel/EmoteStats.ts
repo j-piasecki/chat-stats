@@ -65,6 +65,7 @@ function EmoteRow(
           .onPointerUp(() => {
             if (pressed.value) {
               pressed.value = false
+              hovered.value = false
 
               onPress?.(counter.emote)
             }
@@ -136,7 +137,7 @@ export function EmoteStatsView(
     const mostUsed = stats[0].count
 
     Column(ColumnConfig('#emote-stats').fillWidth().padding(padding, 0, padding, 64), () => {
-      for (let i = 0; i < stats.length; i++) {
+      for (let i = 0; i < Math.min(stats.length, 20); i++) {
         EmoteRow(stats[i], mostUsed, totalCount, barColors[i % barColors.length], clickHandler)
       }
     })
