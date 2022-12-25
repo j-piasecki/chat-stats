@@ -15,6 +15,9 @@ import {
   StackAlignment,
   remember,
   Color,
+  sideEffect,
+  withTiming,
+  Easing,
 } from '@zapp-framework/core'
 import { Theme, Text } from '@zapp-framework/ui'
 import { Emote, EmoteCounter } from 'chat-stats-common'
@@ -67,6 +70,15 @@ function EmoteRow(
             }
           }),
         () => {
+          const size = remember(0)
+
+          sideEffect(() => {
+            size.value = withTiming(counter.count / mostUsed, {
+              duration: 500,
+              easing: Easing.easeInOutCubic,
+            })
+          })
+
           Row(
             RowConfig(`#emote-row-${counter.emote.id}`)
               .height(48)
@@ -77,7 +89,7 @@ function EmoteRow(
                     : Color.accent(background, 0.1)
                   : background
               )
-              .fillWidth(counter.count / mostUsed)
+              .fillWidth(size.value)
               .alignment(Alignment.Center)
               .padding(8, 0, 0, 0),
             () => {

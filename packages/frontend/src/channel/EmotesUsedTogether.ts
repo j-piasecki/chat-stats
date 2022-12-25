@@ -61,8 +61,8 @@ export function EmotesUsedTogether(args: {
         Stack(
           StackConfig('#channel-name-container')
             .fillWidth()
-            .padding(32, 0)
-            .alignment(StackAlignment.Center),
+            .padding(Zapp.screenWidth > 550 ? 0 : 48, 32, 0, 32)
+            .alignment(Zapp.screenWidth > 550 ? StackAlignment.Center : StackAlignment.CenterStart),
           () => {
             Text(TextConfig('#channel-name'), args.channel.name.substring(1))
           }
