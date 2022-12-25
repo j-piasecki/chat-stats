@@ -8,3 +8,4 @@ export { getEmotesMostOftenUsedAlongInChannel } from './getEmotesMostOftenUsedAl
 export { getUserMessagesCountPerChannel } from './getUserMessagesCountPerChannel.js'
 export { getMessagesInChannel } from './getMessagesInChannel.js'
 export { getMessagesInChannelForUsers } from './getMessagesInChannelForUsers.js'
+export { getTrackedChannels } from './getTrackedChannels.js'

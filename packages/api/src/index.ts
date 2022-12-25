@@ -16,6 +16,7 @@ import { getTotalEmoteCountInChannel } from './endpoints/getTotalEmoteCountInCha
 import { getUserCountInChannel } from './endpoints/getUserCountInChannel.js'
 import { getUserMessagesCountPerChannel } from './endpoints/getUserMessagesCountPerChannel.js'
 import { getChannelStats } from './endpoints/getChannelStats.js'
+import { getTrackedChannels } from './endpoints/getTrackedChannels.js'
 
 export interface APIConfig {
   http?: {
@@ -45,6 +46,7 @@ app.get('/emoteCount/:channel', getTotalEmoteCountInChannel)
 app.get('/userCount/:channel', getUserCountInChannel)
 app.get('/messageCountPerChannel/:user', getUserMessagesCountPerChannel)
 app.get('/stats/:channel', getChannelStats)
+app.get('/trackedChannels/', getTrackedChannels)
 
 if (config.http) {
   const httpServer = http.createServer(app)

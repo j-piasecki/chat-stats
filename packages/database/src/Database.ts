@@ -151,4 +151,8 @@ export class Database {
   ) {
     return Query.getMessagesInChannelForUsers(this.pool, channelName, userNames, amount, before)
   }
+
+  static async getTrackedChannels() {
+    return Query.getTrackedChannels(this.pool)
+  }
 }
