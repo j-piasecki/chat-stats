@@ -22,9 +22,10 @@ export class EmoteRegistry {
   public async getEmotesForChannel(channelId: string): Promise<Emote[]> {
     return await Promise.all([this.getGlobalEmotes(), this.getChannelEmotes(channelId)]).then(
       (data) => {
-        const result = [...data[1]]
+        const allEmotes = [...data[1], ...data[0]]
+        const result = []
 
-        for (const emote of data[0]) {
+        for (const emote of allEmotes) {
           if (result.find((e) => e.name === emote.name) === undefined) {
             result.push(emote)
           }
