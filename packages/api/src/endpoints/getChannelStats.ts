@@ -1,3 +1,4 @@
+import { ChannelStats, EmoteCounter } from 'chat-stats-common'
 import { Request, Response } from 'express'
 
 import { Query } from '../query/Query.js'
@@ -26,19 +27,16 @@ export function getChannelStats(req: Request, res: Response) {
 
   StatsRegistry.resolveAll(...queries)
     .then((result) => {
-      res
-        .status(200)
-        .send(
-          JSON.stringify({
-            firstTimersCount: result[0],
-            messageCount: result[1],
-            subscriberCount: result[2],
-            totalEmoteCount: result[3],
-            userCount: result[4],
-            mostUsedemotes: result[5],
-          })
-        )
-        .end()
+      const body: ChannelStats = {
+        firstTimersCount: result[0] as number,
+        messageCount: result[1] as number,
+        subscriberCount: result[2] as number,
+        totalEmoteCount: result[3] as number,
+        userCount: result[4] as number,
+        mostUsedemotes: result[5] as EmoteCounter,
+      }
+
+      res.status(200).send(JSON.stringify(body)).end()
     })
     .catch(() => {
       res.status(404).end()
