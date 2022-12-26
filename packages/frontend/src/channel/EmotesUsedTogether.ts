@@ -118,7 +118,14 @@ export function EmotesUsedTogether(args: {
       } else {
         EmoteStatsView(
           oftenUsed.value,
-          args.stats.mostUsedEmotes.find((counter) => counter.emote.id === args.emote.id)!.count
+          args.stats.mostUsedEmotes.find((counter) => counter.emote.id === args.emote.id)!.count,
+          (emote) => {
+            Navigator.navigate('emotesUsedTogether', {
+              channel: args.channel,
+              stats: args.stats,
+              emote: emote,
+            })
+          }
         )
       }
     })
