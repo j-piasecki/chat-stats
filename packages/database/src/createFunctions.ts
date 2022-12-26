@@ -58,7 +58,7 @@ export async function createFunctions(pool: pg.Pool) {
         LOOP
           INSERT INTO emotes(id, name, animated, urls)
           VALUES(v_emote_id, v_emote_name, v_emote_animated, v_emote_urls)
-          ON CONFLICT(id) DO NOTHING;
+          ON CONFLICT(id) DO UPDATE SET urls=EXCLUDED.urls;
 
           INSERT INTO emotes_in_messages(message_id, emote_id, count)
           VALUES(v_message_id, v_emote_id, v_emote_count)
