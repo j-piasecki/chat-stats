@@ -32,9 +32,9 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
-    "@zapp-framework/core": "^0.1.0",
-    "@zapp-framework/ui": "^0.1.0",
-    "@zapp-framework/web": "^0.1.0",
+    "@zapp-framework/core": "^0.2.0",
+    "@zapp-framework/ui": "^0.2.0",
+    "@zapp-framework/web": "^0.2.0",
     "chat-stats-common": "*"
   }
 }
