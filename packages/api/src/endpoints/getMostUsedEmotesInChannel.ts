@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 
 import { Query } from '../query/Query.js'
-import { StatsRegistry } from '../StatsRegistry.js'
+import { StatsRepository } from '../StatsRepository.js'
 
 // /mostUsedEmotes/:channel
 export function getMostUsedEmotesInChannel(req: Request, res: Response) {
@@ -17,7 +17,7 @@ export function getMostUsedEmotesInChannel(req: Request, res: Response) {
     .after(startTimestamp)
     .forPeriod(period)
 
-  StatsRegistry.resolve(query)
+  StatsRepository.resolve(query)
     .then((emotes) => {
       res
         .status(200)

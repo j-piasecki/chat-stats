@@ -1,7 +1,8 @@
 import { QueryObject } from './query/QueryObject.js'
 import { StatsCache } from './StatsCache.js'
 
-export abstract class StatsRegistry {
+// Wzorzec: Repository
+export abstract class StatsRepository {
   private static cache = new StatsCache()
 
   public static async resolve<T>(query: QueryObject<T>): Promise<T> {
@@ -18,6 +19,6 @@ export abstract class StatsRegistry {
   }
 
   public static async resolveAll(...queries: QueryObject<unknown>[]): Promise<unknown[]> {
-    return await Promise.all(queries.map((query) => StatsRegistry.resolve(query)))
+    return await Promise.all(queries.map((query) => StatsRepository.resolve(query)))
   }
 }

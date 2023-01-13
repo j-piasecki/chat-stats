@@ -1,3 +1,4 @@
+// Wzorzec: Query Object
 export abstract class QueryObject<T> {
   abstract readonly type: string
 

@@ -104,6 +104,7 @@ export async function createTables(pool: pg.Pool) {
     );
   `)
 
+  // Wzorzec: Association Table Mapping
   await pool.query(`
     CREATE TABLE IF NOT EXISTS emotes_in_messages(
       message_id INTEGER NOT NULL,

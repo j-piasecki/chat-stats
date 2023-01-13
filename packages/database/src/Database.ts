@@ -16,6 +16,7 @@ const CONFIG = {
   port: 5432,
 }
 
+// Wzorzec: Gateway
 export class Database {
   private static pool = new pg.Pool(CONFIG)
 

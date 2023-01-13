@@ -1,5 +1,6 @@
 import { User } from './User.js'
 
+// Wzorzec: DTO
 export interface Message {
   id: number
   message: string

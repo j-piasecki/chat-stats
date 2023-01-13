@@ -12,6 +12,7 @@ const ERROR_GAME_DATA: Game = {
   name: 'System error',
 }
 
+// Wzorzec: Registry
 export class GameRegistry {
   private channelGames: Map<string, CachedGame> = new Map()
   private channelLocks: Map<string, boolean> = new Map()

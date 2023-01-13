@@ -2,7 +2,7 @@ import { ChannelStats, EmoteCounter } from 'chat-stats-common'
 import { Request, Response } from 'express'
 
 import { Query } from '../query/Query.js'
-import { StatsRegistry } from '../StatsRegistry.js'
+import { StatsRepository } from '../StatsRepository.js'
 
 // /stats/:channel
 export function getChannelStats(req: Request, res: Response) {
@@ -25,7 +25,7 @@ export function getChannelStats(req: Request, res: Response) {
     query.forChannel(channel).before(endTimestamp).after(startTimestamp).forPeriod(period)
   }
 
-  StatsRegistry.resolveAll(...queries)
+  StatsRepository.resolveAll(...queries)
     .then((result) => {
       const body: ChannelStats = {
         firstTimersCount: result[0] as number,

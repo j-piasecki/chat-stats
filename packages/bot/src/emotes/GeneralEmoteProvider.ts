@@ -4,6 +4,7 @@ import { EmoteProvider } from './EmoteProvider.js'
 import { SevenTVEmoteProvider } from './SevenTVEmoteProvider.js'
 import { TwitchEmoteProvider } from './TwitchEmoteProvider.js'
 
+// Wzorzec: Remote Facade
 export class GeneralEmoteProvider implements EmoteProvider {
   private providers: EmoteProvider[] = []
 

@@ -1104,20 +1104,20 @@
   resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
   integrity sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
 
-"@zapp-framework/core@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@zapp-framework/core/-/core-0.1.0.tgz#929eba41309e7fa3c08ab4cf1c591e9b93230cc4"
-  integrity sha512-yODTjPit8rmmpTXHXoPrqyU6WLHZHfuK/MQ/Fxr/uUlKI+jDvDwUDifvLYmMo48exurHGuWRbzdpOBUgMbDoNA==
+"@zapp-framework/core@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@zapp-framework/core/-/core-0.2.0.tgz#4a2138491f8b92cb794f9bbc442627821fd3c105"
+  integrity sha512-PuLJ7VYL3ky7VpddwkjoBOWJ7SBHbWG1He6UurRg7HfbiUh5lQRoBpwS9s7rAjCtzkQq8gSxe4O65NboQxmfhQ==
 
-"@zapp-framework/ui@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@zapp-framework/ui/-/ui-0.1.0.tgz#86e7b8762a05de46214476bd21e26dbc054d40d1"
-  integrity sha512-yT27Ud7u1q4ZSgH03MED3R0EIAz6i9ZTw5atlwOZq+5zMwlyrLfiFxGv5mKSgvBSDVceIwVB/D4D6BUASQ+0bg==
+"@zapp-framework/ui@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@zapp-framework/ui/-/ui-0.2.0.tgz#59f8c0d00f349ea25809cc7b2bb887e710300a10"
+  integrity sha512-oihlLPTw6MQnA5vxqBwzV+75RUYsB2xQsmPySD2SR34UNAyQYRgEYvCyrpeWY1wDNbcT/p3oyWvNLjIDO4jK/A==
 
-"@zapp-framework/web@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@zapp-framework/web/-/web-0.1.0.tgz#90fb7bd4b018eae040c880bb13008a91eb44add2"
-  integrity sha512-rSn4oZqP97CpG4Rg/tgQzq4h1Mn32DtSgi2+Jpr2B01U6l6eubgiXXq1DGc6grAub1mFfiXq6/TtUwGvV03t2A==
+"@zapp-framework/web@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@zapp-framework/web/-/web-0.2.0.tgz#12404f84d3e6af116dab22a0c09b93557b4f056a"
+  integrity sha512-f7qMga1xdw0bmgWVOS+J6qqEY7f+Qpn5vjRW/SrX4Wj5xqVW096w1RclrFWtj2m+vQSC6DsYC9CMaz4dyN52yA==
 
 accepts@~1.3.8:
   version "1.3.8"

@@ -9,6 +9,7 @@ type CachedEmotes = {
   emotes: Emote[]
 }
 
+// Wzrozec: Registry
 export class EmoteRegistry {
   private emoteProvider = new GeneralEmoteProvider()
 

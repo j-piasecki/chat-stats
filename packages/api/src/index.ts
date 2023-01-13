@@ -31,6 +31,7 @@ export interface APIConfig {
 
 const config: APIConfig = JSON.parse(fs.readFileSync('config.json', 'utf-8'))
 
+// Wzorzec: Front Controller
 const app = express()
 app.use(cors())
 app.use(extractTimestamps)

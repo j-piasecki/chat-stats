@@ -34,6 +34,7 @@ export async function getEmotesMostOftenUsedAlongInChannel(
       [channelName, emoteId, startTimestamp, endTimestamp]
     )
     .then((result) =>
+      // Wzorzec: Record Set
       result.rows.map((row): EmoteCounter => {
         return {
           emote: {

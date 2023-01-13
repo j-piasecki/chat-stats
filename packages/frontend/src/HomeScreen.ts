@@ -51,6 +51,7 @@ function Channel(channel: ChannelType) {
   })
 }
 
+// Wzorzec: Transform View?
 export function Home() {
   Stack(StackConfig('#home-screen-wrapper').background(0x222222), () => {
     const channels = remember<ChannelType[] | null>(null)
